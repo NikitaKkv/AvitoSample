@@ -15,6 +15,15 @@ struct Session {
         std::strcpy(token, tok);
     }
 
+    Session(const Session& other) : Session(other.id, other.username, other.token) {}
+
+    Session& operator=(Session other) {
+        std::swap(id, other.id);
+        std::swap(username, other.username);
+        std::swap(token, other.token);
+        return *this;
+    }
+
     ~Session() {
         delete[] username;
         delete[] token;
@@ -45,8 +54,7 @@ public:
     }
 
     const char* get_fallback_token() {
-        char buf[32] = "guest_token_000";
-        return buf;
+        return "guest_token_000";
     }
 };
 
@@ -69,7 +77,7 @@ int main() {
     std::cout << "Admin token: " << admin->token << "\n";
 
     // Нормализация имени из конфига
-    char* default_name = (char*)"AdminUser";
+    char default_name[] = "AdminUser";
     mgr.normalize_name(default_name);
 
     // Фоллбэк токен
